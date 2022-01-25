@@ -4,24 +4,108 @@
 
 	<title>Test qunit</title>
 	<meta charset="utf-8">
+	<link rel="stylesheet" href="css/styles.css">
 
 </head>
 <body>
 
-	<img src="OPAQueue.jpeg" usemap="#image-map">
+	<h1>Part 2. OPA Test Execution</h1>
 
-	<map name="image-map">
-		<area target="_blank" alt="Open src" title="Open src" href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/opaQunit.js#L235" coords="565,317,732,395" shape="rect">
-		<area target="_blank" alt="Open src" title="Open src" href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/Opa.js#L400" coords="750,496,945,578" shape="rect">
-		<area target="" alt="" title="" href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/Opa.js#L98" coords="775,701,1128,785" shape="rect">
-		<area target="_blank" alt="Open src" title="Open src" href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/opaQunit.js#L235" coords="264,497,448,581" shape="rect">
-		<area target="_blank" alt="Open src" title="Open src" href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/Opa.js#L547" coords="339,704,501,783" shape="rect">
-		<area target="_blank" alt="Open src" title="Open src" href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/Opa.js#L46" coords="833,830,994,908" shape="rect">
-		<area target="_blank" alt="Open src" title="Open src" href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/Opa5.js#L735" coords="774,932,1040,1012" shape="rect">
-		<area target="_blank" alt="Open src" title="Open src" href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/Opa.js#L677" coords="563,1161,720,1238" shape="rect">
-		<area target="_blank" alt="Open src" title="Open src" href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/Opa.js#L103" coords="462,968,687,1055" shape="rect">
-		<area target="_blank" alt="Open src" title="Open src" href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/Opa.js#L65" coords="1137,1243,1300,1324" shape="rect">
-		<area target="_blank" alt="Open src" title="Open src" href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/Opa.js#L66" coords="1143,1007,1298,1089" shape="rect">
-	</map>
+	At this point the tests defined in all journeys are loaded and stored in a queue (accessible from the QUnit.config.queue global var), waiting for the test execution to start.<br>
+	Bellow are the execution steps:
+
+
+	<p>
+		1. The test starting module calls <a href="https://github.com/kineticjs/opaTest/blob/main/webapp/test/integration/opaTests.qunit.js#L11" target="_blank">QUnit.start</a>.
+	</p>
+
+	<p>
+		<a href="QUnitStart.html" target="_blank"><img src="img/QUnitStart.jpeg" class="imglink"></a>
+	</p>
+
+	<p>
+		2. QUnit starts running the tests in consecutive order, as <a href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/opaQunit.js#L255" target="_blank">configured</a>.
+	</p>
+
+	<p>
+		<a href="QUnitQueue.html" target="_blank"><img src="img/QUnitQueue.jpeg" class="imglink"></a>
+	</p>
+
+	<p>
+		3. Bellow are the steps for the execution of a <a href="img/singleTest.JPG" target="_blank">single</a> OPA test;
+	</p>
+
+	<p>
+		<a href="NextOPATest.html" target="_blank"><img src="img/NextOPATest.jpeg" class="imglink"></a>
+	</p>
+
+	<p>
+		4. Each statement of <a href="img/singleTest.JPG" target="_blank">single</a> OPA test is eventually a <b>waitFor</b> async task that is queued for execution;
+	</p>
+
+	<p>
+		<a href="AddToOPAQueue.html" target="_blank"><img src="img/AddToOPAQueue.jpeg" class="imglink"></a>
+	</p>
+
+	<p>
+		4. Once all statements of <a href="img/singleTest.JPG" target="_blank">single</a> OPA test are added to the queue, we proceed to execution (emptying the queue);
+	</p>
+
+	<p>
+		<a href="ProceedToEmptyOPAQueue.html" target="_blank"><img src="img/ProceedToEmptyOPAQueue.jpeg" class="imglink"></a>
+	</p>
+
+	<p>
+		5. An artificial <b>executionDelay</b> will be added before executing each <b>waitFor</b>, if enabled from the configuration.<br>
+		Also, one extra delay is added if <b>asyncPolling</b> is enabled from the configuration.
+	</p>
+
+	<p>
+		<a href="WaitExecutionDelay.html" target="_blank"><img src="img/WaitExecutionDelay.jpeg" class="imglink"></a>
+	</p>
+
+	<p>
+		6. When the execution of the <b>waitFor</b> starts, OPA runs a task that will be polling for the condition 
+		inside the waitFor (the condition we are waiting for) untill the condition is satisfied
+		(or untill we reach a timeout, where the purpose of the timeout is to prevent the test to hang waiting forever).
+	</p>
+
+	<p>
+		<a href="OPACheck.html" target="_blank"><img src="img/OPACheck.jpeg" class="imglink"></a>
+	</p>
+
+	<p>
+		7. If the application enabled <b>autoWait</b> then we first check if the app is ready.
+		If not ready yet (i.e. if the autowauter still has to wait), the check is considered as not satistied yet and polling will continue.
+	</p>
+
+	<p>
+		<a href="autowait.html" target="_blank"><img src="img/autowait.jpeg" class="imglink"></a>
+	</p>
+
+	<p>
+		8. If the check succeeds,
+		we <a href="https://github.com/kineticjs/opaTest/blob/main/openui5/src/sap.ui.core/src/sap/ui/test/Opa.js#L575" target="_blank"></a>run
+		the app test's <a href="img/successCallback.JPG">success callback</a> is such is provided.<br>
+		The success callback often <a href="img/assertSuccess.JPG" target="_blank">asserts</a> that the result is as expected.
+		The <a href="img/successCallback.JPG">success callback</a> may add more <b>waitFor</b> statements to be executed in the context of the current check.<br>
+		This is why these new <b>waitFor</b> should be prerended to the begining of the queue to be executed immediately after the current check.
+	</p>
+
+	<p>
+		<a href="PrerendNewWaitFors.html" target="_blank"><img src="img/PrerendNewWaitFors.jpeg" class="imglink"></a>
+	</p>
+
+	<p>
+		9. If the timeout has passed before the check found the condition we wait for, or if an error is thrown,
+		then we stop the polling, empty the queue and stop the execution of the entire <a href="img/singleTest.JPG" target="_blank">single</a> OPA test (none of the remaimng waitFor statements are executed.)
+	</p>
+
+	<p>
+		<a href="TestError.html" target="_blank"><img src="img/TestError.jpeg" class="imglink"></a>
+	</p>
+
+
+
 </body>
 </html>
