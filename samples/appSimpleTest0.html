@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>Test O</title>
+	<meta charset="utf-8">
+
+	<script src="resources/sap/ui/thirdparty/qunit-2.js"></script>
+	<link rel="stylesheet" href="resources/sap/ui/thirdparty/qunit-2.css">
+
+	<script
+			id='sap-ui-bootstrap'
+			type='text/javascript'
+			src='https://sapui5.hana.ondemand.com/1.98.0/resources/sap-ui-core.js'
+			data-sap-ui-bindingSyntax="complex"
+			data-sap-ui-theme='sap_fiori_3'
+			data-sap-ui-libs='sap.m'
+			data-sap-ui-xx-waitForTheme="true"
+			data-sap-ui-compatVersion="1.16">
+	</script>
+
+<script>
+
+	function createFrame(src) {
+		return new Promise(function (resolve, reject) {
+			var iframe = document.createElement('iframe');
+			iframe.onload = resolve;
+			iframe.src = src;
+			document.body.appendChild(iframe);
+		});
+	}
+
+	QUnit.test('press a button', function (assert) {
+		var done = assert.async();
+
+		// setup
+		createFrame("appSimple.html")
+			.then(function(loadEvent) {
+				var appWindow = loadEvent.target;
+
+				// act
+				var oButtonElement = appWindow.contentDocument.querySelector("button");
+				appWindow.contentWindow.jQuery(oButtonElement).trigger("tap");
+
+				// assert
+				assert.ok(oButtonElement.innerText);
+				done();
+			});
+	});
+
+</script>
+
+</head>
+<body class='sapUiBody' id='content'>
+	<div id="qunit"></div>
+</body>
+</html>

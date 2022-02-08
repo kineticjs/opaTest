@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>Test O</title>
+	<meta charset="utf-8">
+
+	<script src="resources/sap/ui/thirdparty/qunit-2.js"></script>
+	<link rel="stylesheet" href="resources/sap/ui/thirdparty/qunit-2.css">
+
+	<script
+			id='sap-ui-bootstrap'
+			type='text/javascript'
+			src='https://sapui5.hana.ondemand.com/1.98.0/resources/sap-ui-core.js'
+			data-sap-ui-bindingSyntax="complex"
+			data-sap-ui-theme='sap_fiori_3'
+			data-sap-ui-libs='sap.m'
+			data-sap-ui-xx-waitForTheme="true"
+			data-sap-ui-compatVersion="1.16">
+	</script>
+
+<script>
+
+	sap.ui.require(["sap/ui/test/Opa"], function(Opa) {
+
+		var appWindow,
+			oButtonElement,
+			oOpa = new Opa();
+
+		function createFrame(src) {
+			return new Promise(function (resolve, reject) {
+				var iframe = document.createElement('iframe');
+				iframe.onload = function(loadEvent) {
+					appWindow = loadEvent.target;
+					resolve();
+				};
+				iframe.src = src;
+				document.body.appendChild(iframe);
+			});
+		}
+
+		QUnit.test('press a button', function (assert) {
+			var done = assert.async();
+
+			// setup
+			oOpa.iWaitForPromise(createFrame("appSimple.html"));
+
+			// act
+			oOpa.waitFor({
+				check: function() { // wait for the button to show up
+					oButtonElement = appWindow.contentDocument.querySelector("button");
+					return !!oButtonElement;
+				},
+				success: function() {
+					appWindow.contentWindow.jQuery(oButtonElement).trigger("tap");
+				}
+			});
+
+			// assert
+			oOpa.waitFor({
+				check: function() { // wait for the text to update
+					return oButtonElement.innerText === "I got pressed";
+				},
+				success: function() {
+					assert.ok(true);
+					done();
+				}
+			});
+
+			Opa.emptyQueue();
+		});
+	});
+
+</script>
+
+</head>
+<body class='sapUiBody' id='content'>
+	<div id="qunit"></div>
+</body>
+</html>

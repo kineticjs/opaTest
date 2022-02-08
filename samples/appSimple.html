@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>Test O</title>
+	<meta charset="utf-8">
+
+
+	<script
+			id='sap-ui-bootstrap'
+			type='text/javascript'
+			src='https://sapui5.hana.ondemand.com/1.98.0/resources/sap-ui-core.js'
+			data-sap-ui-bindingSyntax="complex"
+			data-sap-ui-theme='sap_fiori_3'
+			data-sap-ui-libs='sap.ui.documentation, sap.ui.layout, sap.m, sap.uxap, sap.f, sap.tnt, sap.ui.codeeditor'
+			data-sap-ui-xx-waitForTheme="true"
+			data-sap-ui-compatVersion="1.16">
+	</script>
+
+
+	<script id="view1" type="sapui5/xmlview">
+		<mvc:View controllerName="view.Main"
+			xmlns="sap.m"
+			xmlns:mvc="sap.ui.core.mvc">
+			<App>
+				<Page>
+				<headerContent>
+					<Button id="pressMeButton" text="Press me" press="onPress" visible="false"/>
+				</headerContent>
+				</Page>
+			</App>
+		</mvc:View>
+	</script>
+
+	<script>
+	sap.ui.define(["sap/ui/core/mvc/Controller"], function(Controller) {
+			"use strict";
+			return Controller.extend("view.Main", {
+				onInit: function() {
+					var that = this;
+					//window.setTimeout(function() {
+						that.byId("pressMeButton").setVisible(true);
+					//}, Math.random() * 10000);
+				},
+
+			onPress: function() {
+					this.byId("pressMeButton").setText("I got pressed");
+			}
+		
+			});
+
+		}, true);
+
+			
+		sap.ui.define(["sap/ui/core/mvc/Controller"], function(Controller) {
+			// "Controller" required from module "sap/ui/core/mvc/Controller"
+			Controller.create({
+				name: "view.Main"
+			});
+		});
+
+
+		sap.ui.xmlview({viewContent:jQuery('#view1').html(), id: "myView"}).placeAt("content");
+	</script>
+	
+	
+</head>
+<body class='sapUiBody' id='content'>
+	<div id="qunit"></div>
+</body>
+</html>

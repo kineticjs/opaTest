@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>Test O</title>
+	<meta charset="utf-8">
+
+	<script src="resources/sap/ui/thirdparty/qunit-2.js"></script>
+	<link rel="stylesheet" href="resources/sap/ui/thirdparty/qunit-2.css">
+
+	<script
+			id='sap-ui-bootstrap'
+			type='text/javascript'
+			src='https://sapui5.hana.ondemand.com/1.98.0/resources/sap-ui-core.js'
+			data-sap-ui-bindingSyntax="complex"
+			data-sap-ui-theme='sap_fiori_3'
+			data-sap-ui-libs='sap.m'
+			data-sap-ui-xx-waitForTheme="true"
+			data-sap-ui-compatVersion="1.16">
+	</script>
+
+<script>
+
+	sap.ui.require(["sap/ui/test/Opa5",
+		"sap/ui/test/opaQUnit",
+		"sap/ui/test/actions/Press",
+		"sap/ui/test/matchers/PropertyStrictEquals"], function(Opa5, opaQUnit, Press, PropertyStrictEquals) {
+
+		var oOpa = new Opa5();
+
+
+		var arrangements = new Opa5({
+			iStartMyApp: function () {
+				this.iStartMyAppInAFrame("appSimple.html");
+			}
+		});
+
+		var actions = new Opa5({
+			iPressOnTheButton: function () {
+				return this.waitFor({
+					viewId : "myView",
+					id : "pressMeButton",
+					actions : new Press(),
+					errorMessage : "did not find the Button"
+				});
+			}
+		});
+
+		var assertions = new Opa5({
+			theButtonShouldHaveADifferentText: function () {
+				return this.waitFor({
+					viewId : "myView",
+					id : "pressMeButton",
+					matchers : new PropertyStrictEquals({
+						name : "text",
+						value : "I got pressed"
+					}),
+					success : function (oButton) {
+						Opa5.assert.ok(true, "The button's text changed to: " + oButton.getText());
+					},
+					errorMessage : "did not change the Button's text"
+				});
+			}
+		});
+
+
+		Opa5.extendConfig({
+			arrangements: arrangements,
+			actions: actions,
+			assertions: assertions,
+			viewNamespace : "view.",
+			appParams: {
+				"key": "value"
+			}
+		});
+
+
+		opaQUnit('press a button', function (Given, When, Then) {
+
+			// setup
+			Given.iStartMyApp();
+
+			// act
+			When.iPressOnTheButton();
+
+			// assert
+			Then.theButtonShouldHaveADifferentText();
+
+		});
+	});
+
+</script>
+
+</head>
+<body class='sapUiBody' id='content'>
+	<div id="qunit"></div>
+</body>
+</html>
